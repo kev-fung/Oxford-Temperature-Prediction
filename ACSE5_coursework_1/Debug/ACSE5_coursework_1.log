@@ -1,0 +1,16 @@
+﻿  Source.cpp
+c:\users\kevin fung\source\repos\acse5_coursework_1\acse5_coursework_1\source.cpp(21): warning C4018: '<': signed/unsigned mismatch
+c:\users\kevin fung\source\repos\acse5_coursework_1\acse5_coursework_1\source.cpp(22): warning C4018: '<': signed/unsigned mismatch
+c:\users\kevin fung\source\repos\acse5_coursework_1\acse5_coursework_1\source.cpp(124): warning C4018: '<': signed/unsigned mismatch
+c:\users\kevin fung\source\repos\acse5_coursework_1\acse5_coursework_1\source.cpp(129): warning C4018: '<': signed/unsigned mismatch
+c:\users\kevin fung\source\repos\acse5_coursework_1\acse5_coursework_1\source.cpp(194): warning C4101: 'k': unreferenced local variable
+c:\users\kevin fung\source\repos\acse5_coursework_1\acse5_coursework_1\source.cpp(375): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
+c:\users\kevin fung\source\repos\acse5_coursework_1\acse5_coursework_1\source.cpp(376): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
+c:\users\kevin fung\source\repos\acse5_coursework_1\acse5_coursework_1\source.cpp(421): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
+c:\users\kevin fung\source\repos\acse5_coursework_1\acse5_coursework_1\source.cpp(433): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+c:\users\kevin fung\source\repos\acse5_coursework_1\acse5_coursework_1\source.cpp(452): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+c:\users\kevin fung\source\repos\acse5_coursework_1\acse5_coursework_1\source.cpp(457): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+c:\users\kevin fung\source\repos\acse5_coursework_1\acse5_coursework_1\source.cpp(462): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
+c:\users\kevin fung\source\repos\acse5_coursework_1\acse5_coursework_1\source.cpp(470): warning C4244: 'argument': conversion from 'double' to 'const int', possible loss of data
+c:\users\kevin fung\source\repos\acse5_coursework_1\acse5_coursework_1\source.cpp(473): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+  ACSE5_coursework_1.vcxproj -> C:\Users\Kevin Fung\source\repos\ACSE5_coursework_1\Debug\ACSE5_coursework_1.exe
