@@ -12,7 +12,7 @@
 #include <math.h>
 #include <cmath>
 #include <vector>
-#include <assert.h> 
+#include <assert.h>
 
 using namespace std;
 
@@ -164,7 +164,6 @@ void fileoutput(string name, const int &samples, double *y, double *x)
 {
 	ofstream datafile(name);
 	if (datafile.is_open()) {
-
 		for (int i = 0; i < samples; i++) {
 			datafile << x[i] << "\t" << y[i] << endl;
 		}
@@ -192,7 +191,6 @@ double hypothesis(int numFeatures, double *weights, double *x)
 
 double cost_function(const int &numFeatures, const int &samples, double *weights, double **x, double *y)
 {
-	double k;
 	double cost = 0.0;
 
 	for (int i = 0; i < samples; i++)
@@ -210,7 +208,7 @@ void gradientDescent(const int &numFeatures, const int &samples, int &iter_max, 
 {
 	int iter = 0;
 	bool not_converged = false;
-	double old_cost = 0, new_cost = 9999, sum2 = 0;
+	double old_cost = 1, new_cost = 0, sum2 = 0;
 	double k = alpha / samples;
 
 	//for (int it = 0; it < iter_max; it++ )
@@ -236,7 +234,7 @@ void gradientDescent(const int &numFeatures, const int &samples, int &iter_max, 
 		old_cost = new_cost;
 		new_cost = cost_function(numFeatures, samples, weights, x, y);
 
-		if (0 == iter % 50)
+		if (0 == iter % 200)
 		{
 			cout << "Working...\t loop: " << iter << "   \t";
 			cout << "Error: " << new_cost << endl;
@@ -263,7 +261,7 @@ void feature_scaling(const int &samples, const int &numFeatures, double **x)
 	{
 		for (int i = 0; i < samples; i++)
 		{
-			// Find mean - summation:
+			// Find mean - summation term:
 			mean[j] += x[i][j];
 
 			// Find max:
@@ -290,6 +288,35 @@ void feature_scaling(const int &samples, const int &numFeatures, double **x)
 
 	delete[] mean, max, min;
 }
+
+
+void mean_norm(const int &samples, double *x)
+{
+	double mean = 0.0;
+	double max = -1e9;
+	double min = 1e9;
+
+	for (int i = 0; i < samples; i++)
+	{
+		// Find mean - summation term:
+		mean += x[i];
+
+		// Find max:
+		if (x[i] > max) max = x[i];
+
+		// Find min:
+		if (x[i] < min) min = x[i];
+	}
+
+	mean = mean / samples;
+
+	// mean normalisation:
+	for (int m = 0; m < samples; m++)
+	{
+		x[m] = (x[m] - mean) / (max - min);
+	}
+}
+
 
 
 //void feature_scaling(const int &samples, int columns[], int &numCol, double **x)
@@ -343,98 +370,119 @@ int main()
 {
 	string fname = "oxforddata.txt";
 
-	// (IF HAVE TIME, CHANGE THIS SO IT READS INTO MEMORY INSTEAD):
 	// Read data into a vector:
 	vector<vector<string> > stringdata = read_data(fname);
-	//printvector(stringdata);
-	//system("pause");
 
 	// Initialise double pointer outside of function:
 	// Double pointer now contains array of rowsize elements
 	double **data = new double*[stringdata.size()];
 	convert_to_double(stringdata, data);
 
+	// Store meta-data:
 	const int samples = stringdata.size();
 	int num_columns = stringdata[1].size();
-	//print_double(samples, num_columns, data);
-	//system("pause");
 
-	// Clear vector memory
+	// Clear vector
 	stringdata.clear();
 
-	//// Find number of jan samples:
-	//double jan_samples = 0;
-	//for (int i = 0; i < samples; i++)
-	//{
-	//	if (data[i][1] == 1) jan_samples++;
-	//}
-
-	//cout << "Number of January Samples: " << jan_samples << endl;
-	double jan_samples = samples;
 
 	// Pick out data columns that I want from original data:
-	double **xi = new double*[jan_samples];
-	double *yi = new double[jan_samples];
+	double **xi = new double*[samples];
+	double *yi = new double[samples];
 
-	// Number of features to include - year, month, afdays, rainfall, sun hours
-	const int numFeatures = 4 + 1;
+	// Number of features to include - year, month, afdays, rainfall, sun hours.
+	const int numFeatures = 10 + 1;
 
-	// Fill the xi and yi pointer arrays:
-	int j = 0;
+	// Fill xi and yi:
 	for (int i = 0; i < samples; i++)
 	{
-		//// Select only january data:
-		//if (data[i][1] != 1) continue;
+		double cont_time = data[i][0] + (data[i][1] / 12.0);
+		xi[i] = new double[numFeatures];
 
-		xi[j] = new double[numFeatures];
+		// Feature Selection: Modelling our hypothesis/polynomial function:
+		xi[i][0] = 1.0;								// Intercept term
+		xi[i][5] = data[i][4];						// Airfrost days
+		xi[i][6] = pow(data[i][4], 2.0);			// Airfrost days ^2
+		xi[i][7] = data[i][6];						// Sun hours
+		xi[i][8] = cont_time * data[i][6];			// Interaction - Time x Sunhours
+		xi[i][9] = cont_time * data[i][4];			// Interaction - Time x Airfrost 
+		xi[i][10] = cont_time * xi[i][6];			// Interaction - Time x Airfrost^2
 
-		// Modelling our hypothesis/polynomial function:
-		xi[j][0] = 1;						// Intercept term
-		//xi[j][1] = data[i][4];			// Airfrost days
-		//xi[j][2] = data[i][5];			// Rainfall
-		//xi[j][3] = data[i][6];			// Sun hours
+		//xi[i][-] = data[i][5];					// Rainfall - Disincluded, no correlation in data
 
 		// Continuous date/time modelled as sine wave:
-		xi[j][1] = sin(2 * M_PI * ((data[i][0]) + (data[i][1] / 12.0)));		// First Harmonic
-		xi[j][2] = cos(2 * M_PI * ((data[i][0]) + (data[i][1] / 12.0)));
-		xi[j][3] = sin(4 * M_PI * ((data[i][0]) + (data[i][1] / 12.0)));		// Second Harmonic
-		xi[j][4] = cos(4 * M_PI * ((data[i][0]) + (data[i][1] / 12.0)));
+		xi[i][1] = sin(2 * M_PI * cont_time);		// First Harmonic
+		xi[i][2] = cos(2 * M_PI * cont_time);
+		xi[i][3] = sin(4 * M_PI * cont_time);		// Second Harmonic
+		xi[i][4] = cos(4 * M_PI * cont_time);
 
 		// Work out the average temperature:
-		yi[j] = (data[i][2] + data[i][3]) / 2;
-		j++;
+		yi[i] = (data[i][2] + data[i][3]) / 2;
 	}
-	//print_double(jan_samples, numFeatures, xi);
-	//system("pause");
 
-	// Mean normalise specific columns of data:
-	// Select columns:
-	//int columns[3] = {1,2,3};
-	//int numCol = 3;
-	//feature_scaling(jan_samples, columns, numCol, xi);
-	//feature_scaling(jan_samples, numFeatures, xi);
+	// Mean-Normalise Features:
+	double *af = new double[samples];
+	double *af2 = new double[samples];
+	double *sh = new double[samples];
+	double *shd = new double[samples];
+	double *afd = new double[samples];
+	double *afd2 = new double[samples];
 
-	//print_double(jan_samples, numFeatures, xi);
-	//system("pause");
+	for (int i = 0; i < samples; i++)
+	{
+		af[i] = xi[i][5];
+		af2[i] = xi[i][6];
+		sh[i] = xi[i][7];
+		shd[i] = xi[i][8];
+		afd[i] = xi[i][9];
+		afd2[i] = xi[i][10];
+	}
+
+	mean_norm(samples, af);
+	mean_norm(samples, af2);
+	mean_norm(samples, sh);
+	mean_norm(samples, shd);
+	mean_norm(samples, afd);
+	mean_norm(samples, afd2);
+
+	for (int i = 0; i < samples; i++)
+	{
+		xi[i][5] = af[i];
+		xi[i][6] = af2[i];
+		xi[i][7] = sh[i];
+		xi[i][8] = shd[i];
+		xi[i][9] = afd[i];
+		xi[i][10] = afd2[i];
+	}
+
+	delete[] af, af2, sh, shd, afd, afd2;
+
+	// Output other data for analysis:
+	// Commented out for efficiency reasons...
+	//
+	//double *af = new double[samples];
+	//double *rainfall = new double[samples];
+	//double *sunhours = new double[samples];
+	//for (int i = 0; i < samples; i++)
+	//{
+	//	af[i] = data[i][4];
+	//	rainfall[i] = data[i][5];
+	//	sunhours[i] = data[i][6];
+	//}
+	//fileoutput("af_vs_t1.dat", samples, yi, af);
+	//fileoutput("rf_vs_t1.dat", samples, yi, rainfall);
+	//fileoutput("sh_vs_t1.dat", samples, yi, sunhours);
+	//
+	//delete[] af, rainfall, sunhours;
 
 
 	// Output original data:
-	double *date = new double[jan_samples];
-	j = 0;
 
-	for (int i = 0; i < samples; i++)
-	{
-		// Output only january dates
-		//if (data[i][1] != 1) continue;
-		date[j] = (data[i][0]) + (data[i][1] / 12.0);
-		//date[j] = data[i][0];
-		j++;
-	}
+	// Assign new date array for plotting:
+	double *date = new double[samples];
+	for (int i = 0; i < samples; i++) date[i] = (data[i][0]) + (data[i][1] / 12.0);
 
-	fileoutput("input.dat", jan_samples, yi, date);
-
-	//print_double(jan_samples, numFeatures, xi);
-	//system("pause");
+	fileoutput("input.dat", samples, yi, date);
 
 
 	// Extrapolate using linear regression:
@@ -442,36 +490,32 @@ int main()
 	for (int i = 0; i < numFeatures; i++) weights[i] = 0.0;
 
 	// Learning rate
-	double alpha = 0.001;
+	double alpha = 0.1;
 	// Tolerance for convergence
 	double abs_tol = 1e-3;
 	// Maximum iterations allowed
-	int iter_max = 10000;
+	int iter_max = 1e7;
 
 	// Train function i.e. compute new weights:
 	cout << "Testing our gradient descent: " << endl;
-	gradientDescent(numFeatures, jan_samples, iter_max, weights, xi, yi, alpha, abs_tol);
+	gradientDescent(numFeatures, samples, iter_max, weights, xi, yi, alpha, abs_tol);
 	cout << "\nFound weights for our polnomial: " << endl;
 	for (int i = 0; i < numFeatures; i++) cout << weights[i] << ", ";
 
 	// Check our cost i.e. error in the new function:
-	double cost = cost_function(numFeatures, jan_samples, weights, xi, yi);
+	double cost = cost_function(numFeatures, samples, weights, xi, yi);
 	cout << "\nError of our found function: " << cost << endl;
 
-	// Plot our function: 
+	// Backtesting our found polynomial:
 	// i.e. feed original x data and see what the found y is:
-	double *test_y = new double[jan_samples];
+	double *test_y = new double[samples];
+	for (int i = 0; i < samples; i++) test_y[i] = hypothesis(numFeatures, weights, xi[i]);
+	fileoutput("test.dat", samples, test_y, date);
 
-	for (int i = 0; i < jan_samples; i++)
-	{
-		test_y[i] = hypothesis(numFeatures, weights, xi[i]);
-	}
 
-	// Output test data:
-	fileoutput("test.dat", jan_samples, test_y, date);
-
+	// End of code: Delete all pointers
 	delete[] date, test_y, weights, yi;
-	delete_double(jan_samples, xi);
+	delete_double(samples, xi);
 	delete_double(samples, data);
 
 	system("pause");
