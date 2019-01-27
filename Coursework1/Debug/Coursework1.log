@@ -1,0 +1,7 @@
+﻿  Source.cpp
+c:\users\kevin fung\source\repos\coursework1\coursework1\source.cpp(25): warning C4018: '<': signed/unsigned mismatch
+c:\users\kevin fung\source\repos\coursework1\coursework1\source.cpp(26): warning C4018: '<': signed/unsigned mismatch
+c:\users\kevin fung\source\repos\coursework1\coursework1\source.cpp(243): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\kevin fung\source\repos\coursework1\coursework1\source.cpp(243): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+c:\users\kevin fung\source\repos\coursework1\coursework1\source.cpp(290): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  Coursework1.vcxproj -> C:\Users\Kevin Fung\source\repos\Coursework1\Debug\Coursework1.exe
