@@ -1,5 +1,0 @@
-﻿  Source.cpp
-c:\users\kevin fung\onedrive - imperial college london\acse-5\acse-5\coursework 1\acse5_coursework_1\source.cpp(237): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-c:\users\kevin fung\onedrive - imperial college london\acse-5\acse-5\coursework 1\acse5_coursework_1\source.cpp(237): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
-c:\users\kevin fung\onedrive - imperial college london\acse-5\acse-5\coursework 1\acse5_coursework_1\source.cpp(249): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-  ACSE5_coursework_1.vcxproj -> C:\Users\Kevin Fung\OneDrive - Imperial College London\ACSE-5\ACSE-5\Coursework 1\x64\Debug\ACSE5_coursework_1.exe
