@@ -211,7 +211,6 @@ void gradientDescent(const int &numFeatures, const int &samples, int &iter_max, 
 	double old_cost = 1, new_cost = 0, sum2 = 0;
 	double k = alpha / samples;
 
-	//for (int it = 0; it < iter_max; it++ )
 	while (abs(new_cost - old_cost) > tol)
 	{
 		if (iter >= iter_max)
@@ -363,7 +362,6 @@ void mean_norm(const int &samples, double *x)
 //
 //	delete[] mean, max, min;
 //}
-
 
 
 int main()
