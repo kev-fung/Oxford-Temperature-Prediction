@@ -11,8 +11,8 @@ Open source data taken from the Met Office:
 https://www.metoffice.gov.uk/pub/data/weather/uk/climate/stationdata/oxforddata.txt
 
 ## Implementations
-A basic gui based on command line has been provided. 
+A basic gui based on command line has been provided.
 
-Several cleaning methodologies were hard implemented into the code, thus the code only works for Met Office data.
+Several cleaning methodologies were hard implemented into the code: the code only works for Met Office data.
 
 See code description for further information on software design.
