@@ -1,4 +1,4 @@
-# UK Temperature Predictor
+# Temperature Predictor
 
 A C++ program built on a hard-coded implementation of the linear regression algorithm to forecast daily temperatures specifically in Oxford, UK. 🌞
 
