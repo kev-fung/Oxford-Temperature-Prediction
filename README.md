@@ -1,6 +1,6 @@
 # Oxford Temperature Prediction
 
-A C++ program built on a hard-coded implementation of the linear regression algorithm to forecast daily temperatures in Oxford, UK.
+A C++ program built on a hard-coded implementation of the linear regression algorithm to forecast daily temperatures in Oxford, UK 🌦.
 
 ## How to run
 1. Change linear regression model in main cpp if required.
